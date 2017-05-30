@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    <link rel="stylesheet" href="../resources/javascripts/jqwidgets/jqwidgets/styles/jqx.base.css" type="text/css"/>
+    <script type="application/javascript" src="../resources/javascripts/canvasjs/canvasjs.min.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/scripts/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxcore.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxbuttons.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxscrollbar.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxpanel.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxtree.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxgrid.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxgrid.pager.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxgrid.selection.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxdata.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxlistbox.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxdropdownlist.js"></script>
+    <script type="text/javascript" src="../resources/javascripts/jqwidgets/jqwidgets/jqxgrid.export.js"></script>
+
+
+    <link rel="stylesheet" href="../resources/javascripts/c3-0.4.11/c3.css" type="text/css">
+    <script type="application/javascript" src="../resources/javascripts/d3js/3.5.17/d3.min.js" charset="utf-8"></script>
+    <script type="application/javascript" src="../resources/javascripts/c3-0.4.11/c3.min.js" charset="utf-8"></script>
+
+    <script type="application/javascript" src="../resources/javascripts/highchart/code/highcharts.js"></script>
+    <script type="application/javascript" src="../resources/javascripts/highchart/code/highcharts-more.js"></script>
+    <script type="application/javascript" src="../resources/javascripts/highchart/code/modules/exporting.js"></script>
+
+
+</head>
+<body>
+<form action="javascript:void(null);" method="post" name="auth" id="form" onsubmit="send()">
+    <fieldset>
+        <legend>Connection</legend>
+        <label>Ip<input id="ip" type="text"></label>
+        <label>Port<input id="port" type="text"></label>
+        <label>Login<input id="login" type="text"></label>
+        <label>Pasword<input id="password" type="password"></label>
+        <button type="submit">Send</button>
+    </fieldset>
+</form>
+
+<div id="jqxlistbox">
+
+</div>
+
+<div id='jqxWidget' style="font-size: 13px; font-family: Verdana; float: left;">
+    <div id="jqxgrid"></div>
+</div>
+<br>
+
+<div id='jqxWidget1' style="font-size: 13px; font-family: Verdana; float: left;">
+    <div id="container"></div>
+</div>
+
+<br>
+<div>
+    <div id="chartContainer" style="height: 300px; width: 800px; padding-top: 200px"></div>
+</div>
+
+<br>
+
+<div id="chartContainer2" style="height: 300px; width: 800px; padding-top: 200px"></div>
+
+<br>
+
+<div id="chartContainer3" style="height: 300px; width: 800px; padding-top: 200px"></div>
+
+<br>
+
+<div id="chartContainer4" style="height: 300px; width: 800px; padding-top: 200px"></div>
+
+<br>
+
+<div id="chartContainer5" style="height: 300px; width: 800px; padding-top: 200px"></div>
+
+<script type="application/javascript">
+
+    var json = null;
+    var datas = null;
+    var arr = [];
+
+    var volts = [];
+    var amper = [];
+    var volt2 = [];
+    var amper2 = [];
+    var ambiet_temp = [];
+    var press = [];
+    var temp1 = [];
+    var temp2 = [];
+    var temp3 = [];
+    var temp4 = [];
+    var temp5 = [];
+    var temp6 = [];
+    var temp7 = [];
+    var main = document.getElementById('main');
+    var current_ul = main;
+
+    function download(datas) {
+        //download json data
+        volts.length = 0;
+        amper.length = 0;
+        volt2.length = 0;
+        amper2.length = 0;
+        ambiet_temp.length = 0;
+        press.length = 0;
+        temp1.length = 0;
+        temp2.length = 0;
+        temp3.length = 0;
+        temp4.length = 0;
+        temp5.length = 0;
+        temp6.length = 0;
+        temp7.length = 0;
+
+//                datas=data;
+
+
+
+                for (var i = 0; i < datas.volts.length; i++) {
+                    row = {};
+
+                    row["volts"] = datas.volts[i];
+                    row["amper"] = datas.amper[i];
+                    row["volt2"] = datas.volt2[i];
+                    row["amper2"] = datas.amper2[i];
+                    row["ambiet_temp"] = datas.ambiet_temp[i];
+                    row["press"] = datas.press[i];
+                    volts.push({x: i, y: datas.volts[i]});
+                    amper.push({x: i, y: datas.amper[i]});
+                    volt2.push({x: i, y: datas.volt2[i]});
+                    amper2.push({x: i, y: datas.amper2[i]});
+                    ambiet_temp.push({x: i, y: datas.ambiet_temp[i]});
+                    press.push({x: i, y: datas.press[i]});
+
+                    if (i < datas.temp1.length) {
+                        row["temp1"] = datas.temp1[i];
+                        row["temp2"] = datas.temp2[i];
+                        row["temp3"] = datas.temp3[i];
+                        row["temp4"] = datas.temp4[i];
+                        row["temp5"] = datas.temp5[i];
+                        row["temp6"] = datas.temp6[i];
+                        row["temp7"] = datas.temp7[i];
+                        temp1.push({x: i, y: datas.temp1[i]});
+                        temp2.push({x: i, y: datas.temp2[i]});
+                        temp3.push({x: i, y: datas.temp3[i]});
+                        temp4.push({x: i, y: datas.temp4[i]});
+                        temp5.push({x: i, y: datas.temp5[i]});
+                        temp6.push({x: i, y: datas.temp6[i]});
+                        temp7.push({x: i, y: datas.temp7[i]});
+                    }
+                    arr.push(row);
+                }
+
+                var source =
+                    {
+
+                    datatype: "array",
+                    datafields: [
+                        {name: "volts", type: 'int'},
+                        {name: "amper", type: 'int'},
+                        {name: "volt2", type: 'int'},
+                        {name: "amper2", type: 'int'},
+                        {name: "ambiet_temp", type: 'int'},
+                        {name: "press", type: 'int'},
+                        {name: "temp1", type: 'int'},
+                        {name: "temp2", type: 'int'},
+                        {name: "temp3", type: 'int'},
+                        {name: "temp4", type: 'int'},
+                        {name: "temp5", type: 'int'},
+                        {name: "temp6", type: 'int'},
+                        {name: "temp7", type: 'int'}
+                    ],
+                    localdata: arr
+//                    url:"http://localhost:8080/rest/service/file?url="+url1
+
+                };
+                var dataAdapter = new $.jqx.dataAdapter(source);
+                // create grid after download json data
+                $("#jqxgrid").jqxGrid(
+                    {
+                        width: 800,
+                        height: 600,
+                        source: dataAdapter,
+                        pageable: true,
+                        autoheight: true,
+                        columns: [
+                            {text: 'volt', datafield: 'volts', width: 50},
+                            {text: 'amper', datafield: 'amper', width: 50},
+                            {text: 'volt2', datafield: 'volt2', width: 50},
+                            {text: 'amper2', datafield: 'amper2', width: 50, cellsalign: 'right'},
+                            {text: 'amb temp', datafield: 'ambiet_temp', width: 100},
+                            {text: 'press', datafield: 'press'},
+                            {text: 'temp1', datafield: 'temp1'},
+                            {text: 'temp2', datafield: 'temp2'},
+                            {text: 'temp3', datafield: 'temp3'},
+                            {text: 'temp4', datafield: 'temp4'},
+                            {text: 'temp5', datafield: 'temp5'},
+                            {text: 'temp6', datafield: 'temp6'},
+                            {text: 'temp7', datafield: 'temp7'}
+                        ]
+                    });
+
+
+                //////////////////////////////////////////////////////////////////////////
+                Highcharts.chart('container', {
+                    chart: {
+                        type: 'columnrange',
+                        inverted: true
+                    },
+                    title: {
+                        text: 'Min_MAX Value'
+                    },
+                    xAxis: {
+                        categories: ['Temp1', 'Temp2', 'Temp3', 'Temp4', 'Temp5', 'Temp6', 'Temp7']
+                    },
+
+                    yAxis: {
+                        title: {
+                            text: 'Temperature ( C )'
+                        }
+                    },
+                    tooltip: {
+                        valueSuffix: 'C'
+                    },
+                    plotOptions: {
+                        columnrange: {
+                            dataLabels: {
+                                enabled: true,
+                                formatter: function () {
+                                    return this.y + 'C';
+                                }
+                            }
+                        }
+                    },
+                    legend: {
+                        enabled: false
+                    },
+
+                    series: [
+
+                        {
+                            name: 'Temperatures',
+                            data: [
+                                [datas.min_temp1, datas.max_temp1],
+                                [datas.min_temp2, datas.max_temp2],
+                                [datas.min_temp3, datas.max_temp3],
+                                [datas.min_temp4, datas.max_temp4],
+                                [datas.min_temp5, datas.max_temp5],
+                                [datas.min_temp6, datas.max_temp6],
+                                [datas.min_temp7, datas.max_temp7]
+                            ]
+                        }
+                    ]
+
+
+                });
+////////////////////////////////////////////////////////////////////////
+                var chart2 = c3.generate({
+                    bindto: '#chartContainer2',
+                    data: {
+                        json: {
+                            avg_volt1: datas.avg_volt,
+                            avg_amper: datas.avg_amper,
+                            avg_volt2: datas.avg_volt2,
+                            avg_amper2: datas.avg_amper2,
+                            avg_ambiet_temp: datas.avg_ambiet_temp,
+                            avg_press: datas.avg_press,
+                            avg_temp1: datas.avg_temp1,
+                            avg_temp2: datas.avg_temp2,
+                            avg_temp3: datas.avg_temp3,
+                            avg_temp4: datas.avg_temp4,
+                            avg_temp5: datas.avg_temp5,
+                            avg_temp6: datas.avg_temp6,
+                            avg_temp7: datas.avg_temp7
+                        }
+                    },
+                    zoom: {
+                        enabled: true
+                    },
+                    tooltip: {
+                        grouped: false // Default true
+                    },
+                    type: 'bar'
+                });
+                ///////////////////////////////////////////////////////////////
+                var chart3 = c3.generate({
+                    bindto: '#chartContainer3',
+                    data: {
+                        json: {
+                            volt1: datas.volts,
+                            volt2: datas.volt2
+
+                        }
+                    },
+                    zoom: {
+                        enabled: true
+                    },
+                    tooltip: {
+                        grouped: false // Default true
+                    },
+                    type: 'bar'
+                });
+                ////////////////////////////////////////////////////////////////
+                var chart4 = c3.generate({
+                    bindto: '#chartContainer4',
+                    data: {
+                        json: {
+
+                            amper: datas.amper,
+                            amper2: datas.amper2
+
+                        }
+                    },
+                    zoom: {
+                        enabled: true
+                    },
+                    tooltip: {
+                        grouped: false // Default true
+                    }
+                });
+                //////////////////////////////////////////////////////////////////////
+                var chart5 = c3.generate({
+                    bindto: '#chartContainer5',
+                    data: {
+                        json: {
+                            ambiet_temp: datas.ambiet_temp
+                        }
+                    },
+                    zoom: {
+                        enabled: true
+                    },
+                    tooltip: {
+                        grouped: false // Default true
+                    }
+                });
+
+
+    }
+
+    //get menu
+    window.onload = function () {
+
+        $.ajax({
+           url:"localmenu",
+            datatype:"json",
+            success:function (result) {
+                var source=[];
+                var ids = [];
+                console.log(result);
+                for(var i=0;i<result.length;i++)
+                {
+                    source[i]=(result[i].date);
+                    ids[i]=result[i].id;
+                }
+                console.log(ids);
+                $("#jqxlistbox").jqxListBox({ source: source, width: '200px', height: '200px' });
+                $('#jqxlistbox').bind('select', function (event) {
+                    var args = event.args;
+                    var item = $('#jqxlistbox').jqxListBox('getItem', args.index);
+
+                    console.log(item);
+                    console.log(args.index);
+                    $.ajax({
+                        url:"localmenu2/"+ids[args.index],
+                        datatype:"json",
+                        success:function (re) {
+                            download(re)
+                        }
+                    })
+                });
+
+            }
+        });
+
+
+    };
+
+
+    function send() {
+        var datas1 = {
+            ip: $('#ip').val(),
+            port: $('#port').val(),
+            login: $('#login').val(),
+            password: $('#password').val()
+        };
+        console.log(datas1);
+        $.ajax({
+            url: "menu",
+            data: datas1,
+            success: function (data) {
+                json = data;
+                fill(json);
+                $('#jqxTree').jqxTree({height: '300px', width: '300px'});
+            }
+        });
+
+    }
+
+    String.prototype.replaceAll = function(search, replace){
+        return this.split(search).join(replace);
+    }
+
+</script>
+
+</body>
+</html>
